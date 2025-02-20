@@ -13,31 +13,31 @@
 
         logs = craneLib.buildPackage ({
           pname = "logs";
-          cargoExtraArgs = "-p 01_logs";
+          cargoExtraArgs = "-p logs";
           src = craneLib.cleanCargoSource ./.;
         });
 
         blinky = craneLib.buildPackage ({
           pname = "blinky";
-          cargoExtraArgs = "-p 02_blinky";
+          cargoExtraArgs = "-p blinky";
           src = craneLib.cleanCargoSource ./.;
         });
 
         button = craneLib.buildPackage ({
           pname = "button";
-          cargoExtraArgs = "-p 03_button";
+          cargoExtraArgs = "-p button";
           src = craneLib.cleanCargoSource ./.;
         });
 
         recieve = craneLib.buildPackage ({
           pname = "recieve";
-          cargoExtraArgs = "-p 04_recieve";
+          cargoExtraArgs = "-p recieve";
           src = craneLib.cleanCargoSource ./.;
         });
 
         send = craneLib.buildPackage ({
           pname = "send";
-          cargoExtraArgs = "-p 05_send";
+          cargoExtraArgs = "-p send";
           src = craneLib.cleanCargoSource ./.;
         });
 
