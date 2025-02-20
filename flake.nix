@@ -27,7 +27,7 @@
           src = craneLib.cleanCargoSource ./.;
           strictDeps = true;
 
-          cargoExtraArgs = "--target wasm32-wasip1";
+          cargoExtraArgs = "--target thumbv8m.main-none-eabihf";
 
           # Tests currently need to be run via `cargo wasi` which
           # isn't packaged in nixpkgs yet...
