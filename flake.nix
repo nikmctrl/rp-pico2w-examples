@@ -3,49 +3,51 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     crane.url = "github:ipetkov/crane";
     flake-utils.url = "github:numtide/flake-utils";
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, crane, flake-utils, ... }:
+  outputs = { self, nixpkgs, crane, flake-utils, rust-overlay, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = nixpkgs.legacyPackages.${system};
-        craneLib = crane.mkLib pkgs;
-
-        logs = craneLib.buildPackage ({
-          pname = "logs";
-          cargoExtraArgs = "-p logs";
-          src = craneLib.cleanCargoSource ./.;
+        pkgs = import {
+          inherit system;
+          overlays = [ rust-overlay.overlays.default ];
+        };
+        
+        craneLib = (crane.mkLib pkgs).overrideToolchain (p: p.rust-bin.stable.latest.default.override {
+          targets = [ "thumbv8m.main-none-eabihf" ];
         });
 
-        blinky = craneLib.buildPackage ({
-          pname = "blinky";
-          cargoExtraArgs = "-p blinky";
-          src = craneLib.cleanCargoSource ./.;
-        });
 
-        button = craneLib.buildPackage ({
-          pname = "button";
-          cargoExtraArgs = "-p button";
-          src = craneLib.cleanCargoSource ./.;
-        });
 
-        recieve = craneLib.buildPackage ({
-          pname = "recieve";
-          cargoExtraArgs = "-p recieve";
+        examples = craneLib.buildPackage {
           src = craneLib.cleanCargoSource ./.;
-        });
+          strictDeps = true;
 
-        send = craneLib.buildPackage ({
-          pname = "send";
-          cargoExtraArgs = "-p send";
-          src = craneLib.cleanCargoSource ./.;
-        });
+          cargoExtraArgs = "--target wasm32-wasip1";
+
+          # Tests currently need to be run via `cargo wasi` which
+          # isn't packaged in nixpkgs yet...
+          doCheck = false;
+
+          buildInputs = [
+            # Add additional build inputs here
+          ] ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [
+            # Additional darwin specific inputs can be set here
+            pkgs.libiconv
+          ];
+        };
+
+        
 
         
       in
     {
       packages = {
-        inherit logs blinky button recieve send;
+        inherit examples;
       };
     });
 }

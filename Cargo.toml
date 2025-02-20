@@ -51,3 +51,23 @@ debug = 2
 [profile.dev]
 lto = true
 opt-level = "z"
+
+[[bin]]
+name = "logs"
+path = "src/bin/logs.rs"
+
+[[bin]]
+name = "blinky"
+path = "src/bin/blinky.rs"
+
+[[bin]]
+name = "button"
+path = "src/bin/button.rs"
+
+[[bin]]
+name = "recieve"
+path = "src/bin/recieve.rs"
+
+[[bin]]
+name = "send"
+path = "src/bin/send.rs"
