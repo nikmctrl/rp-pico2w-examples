@@ -24,7 +24,7 @@
 
 
         examples = craneLib.buildPackage {
-          src = craneLib.cleanCargoSource ./.;
+          src = ./.;
           strictDeps = true;
 
           cargoExtraArgs = "--target thumbv8m.main-none-eabihf";
